@@ -81,12 +81,6 @@ func Call(_ realm, functionName string, args ...any) any {
 			panic("no interpreter set")
 		}
 		
-		// Validate call
-		cType := storage.GetContractType(state)
-		if err := currentInterpreter.ValidateCall(cType, functionName, args...); err != nil {
-			panic("validation failed: " + err.Error())
-		}
-		
 		// Execute on THIS proxy's state
 		return currentInterpreter.MasterCall(state, functionName, args...)
 	})
@@ -185,19 +179,14 @@ func renderMain() string {
 	output += "- Can be upgraded independently\n\n"
 	
 	output += "## Available Operations\n\n"
-	
+
 	// Get current interpreter info
 	if currentInterpreter != nil {
-		functions := currentInterpreter.GetSupportedFunctions(contractType)
 		interpreterID := currentInterpreter.GetVersion()
-		output += "**Current Functions (" + interpreterID + "):**\n"
-		for _, fn := range functions {
-			signature := currentInterpreter.GetFunctionSignature(contractType, fn)
-			output += "- `" + signature + "`\n"
-		}
+		output += "**Current Interpreter:** " + interpreterID + "\n\n"
 	}
-	
-	output += "\n**Management:**\n"
+
+	output += "**Management:**\n"
 	output += "- `UpgradeInterpreter(newInterpreter)` - Upgrade logic (owner only)\n"
 	output += "- `GetInfo()` - View contract metadata\n"
 	
@@ -215,8 +204,6 @@ func renderInfo() string {
 	if currentInterpreter != nil {
 		output += "\n**Current Interpreter:**\n"
 		output += "- Version: " + currentInterpreter.GetVersion() + "\n"
-		functions := currentInterpreter.GetSupportedFunctions(contractType)
-		output += "- Supported Functions: " + toString(len(functions)) + "\n"
 	}
 	
 	return output

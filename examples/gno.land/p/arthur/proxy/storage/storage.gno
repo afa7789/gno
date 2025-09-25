@@ -6,10 +6,9 @@ import (
 	"gno.land/p/nt/avl"
 )
 
-// ProxyStorage provides persistent state management with sharding for proxy contracts
-// Similar to OpenZeppelin storage pattern but designed for upgradeable contracts
+// ProxyStorage provides simple persistent state management for proxy contracts
 type ProxyStorage struct {
-	state *avl.Tree // accountID -> *avl.Tree
+	state *avl.Tree
 }
 
 // NewProxyStorage creates a new proxy storage instance
@@ -35,15 +34,12 @@ type State interface {
 type ExecFn func(state State) any
 
 // Execute runs a function against the storage state for a specific accountID
-// This enables sharding - each contract instance gets its own isolated storage
 func (s *ProxyStorage) Execute(accountID string, execFn ExecFn) any {
 	tree, ok := s.state.Get(accountID)
 	if !ok {
-		// Create new storage tree for this contract instance
 		tree = avl.NewTree()
 		s.state.Set(accountID, tree)
 	} else {
-		// Verify ACL permissions for existing storage
 		s.onlyTrustedRealm(State(tree.(*avl.Tree)))
 	}
 	return execFn(State(tree.(*avl.Tree)))
