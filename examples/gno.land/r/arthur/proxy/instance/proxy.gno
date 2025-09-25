@@ -32,7 +32,7 @@ func init() {
 }
 
 // Initialize sets up this specific proxy contract
-func Initialize(_ realm, cType, version string, interpreter interfaces.IInterpreter) {
+func Initialize(cType, version string, interpreter interfaces.IInterpreter) {
 	if initialized {
 		panic("proxy already initialized")
 	}
@@ -54,11 +54,6 @@ func Initialize(_ realm, cType, version string, interpreter interfaces.IInterpre
 		storage.SetOwner(state, owner.String())
 		storage.SetCreated(state)
 		
-		// Set ACL for this proxy instance
-		storage.SetACL(state, []string{
-			"gno.land/r/proxy/instance", // This proxy
-		})
-		
 		return nil
 	})
 	
@@ -70,7 +65,7 @@ func Initialize(_ realm, cType, version string, interpreter interfaces.IInterpre
 }
 
 // Call executes a function on THIS proxy's current interpreter
-func Call(_ realm, functionName string, args ...any) any {
+func Call(functionName string, args ...any) any {
 	if !initialized {
 		panic("proxy not initialized")
 	}
@@ -87,7 +82,7 @@ func Call(_ realm, functionName string, args ...any) any {
 }
 
 // UpgradeInterpreter changes THIS proxy's interpreter
-func UpgradeInterpreter(_ realm, newInterpreter interfaces.IInterpreter) {
+func UpgradeInterpreter(newInterpreter interfaces.IInterpreter) {
 	if !initialized {
 		panic("proxy not initialized")
 	}

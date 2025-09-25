@@ -1,8 +1,6 @@
 package storage
 
 import (
-	"std"
-
 	"gno.land/p/nt/avl"
 )
 
@@ -15,12 +13,6 @@ type ProxyStorage struct {
 func NewProxyStorage() *ProxyStorage {
 	return &ProxyStorage{
 		state: avl.NewTree(),
-	}
-}
-
-func (s *ProxyStorage) onlyTrustedRealm(state State) {
-	if !IsInACL(state, std.PreviousRealm().PkgPath()) {
-		panic("unexpected storage access from realm: " + std.PreviousRealm().PkgPath())
 	}
 }
 
@@ -39,24 +31,6 @@ func (s *ProxyStorage) Execute(accountID string, execFn ExecFn) any {
 	if !ok {
 		tree = avl.NewTree()
 		s.state.Set(accountID, tree)
-	} else {
-		s.onlyTrustedRealm(State(tree.(*avl.Tree)))
 	}
 	return execFn(State(tree.(*avl.Tree)))
-}
-
-// GetAccountIDs returns all contract instance IDs (for admin/debugging)
-func (s *ProxyStorage) GetAccountIDs() []string {
-	var ids []string
-	s.state.Iterate("", "", func(key string, value any) bool {
-		ids = append(ids, key)
-		return false
-	})
-	return ids
-}
-
-// HasAccount checks if a contract instance exists
-func (s *ProxyStorage) HasAccount(accountID string) bool {
-	_, exists := s.state.Get(accountID)
-	return exists
 }
