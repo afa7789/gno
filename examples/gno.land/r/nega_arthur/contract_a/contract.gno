@@ -2,7 +2,7 @@ package contract_a
 
 import (
 	"std"
-	"gno.land/p/nega_arthur/storage"
+	stor "gno.land/p/nega_arthur/storage"
 )
 
 // MINIMAL CONTRACT A - Data processor (no storage)
@@ -21,20 +21,20 @@ func Init(cur realm) {
 }
 
 // Process data - simple logic, just stores input as-is
-func MethodA(cur realm, storage *minimalStorage.Storage, input string) string {
+func MethodA(cur realm, storage *stor.Storage, input string) string {
 	if !initialized {
 		panic("not initialized")
 	}
 
 	// Simple processing: store input directly
-	storage.Set("last_input", input)
-	storage.Set("processed_by", "ContractA")
+	stor.Set("last_input", input)
+	stor.Set("processed_by", "ContractA")
 
 	return input
 }
 
 // Get processed data
-func GetData(cur realm, storage *minimalStorage.Storage) string {
+func GetData(cur realm, storage *stor.Storage) string {
 	if !initialized {
 		panic("not initialized")
 	}

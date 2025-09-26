@@ -1,4 +1,4 @@
-package minimalProxy
+package proxy
 
 import "testing"
 
