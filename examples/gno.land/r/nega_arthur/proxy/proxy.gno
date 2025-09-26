@@ -58,14 +58,17 @@ func Call(cur realm, method string, args ...interface{}) interface{} {
 func callInterpreter(interpreterAddr std.Address, method string, storage *storage.Storage, args ...interface{}) interface{} {
 
 	// ACTUAL CROSS-REALM CALLS based on registered realm path
-	switch realmPath {
-	case "gno.land/r/nega_arthur/interpreter_a":
-		return interpreter_a.Call(cross, method, storage, args...)
-	case "gno.land/r/nega_arthur/interpreter_b":
-		return interpreter_b.Call(cross, method, storage, args...)
-	default:
-		panic("unknown interpreter realm: " + realmPath)
-	}
+	// switch realmPath {
+	// case "gno.land/r/nega_arthur/interpreter_a":
+	// 	return interpreter_a.Call(cross, method, storage, args...)
+	// case "gno.land/r/nega_arthur/interpreter_b":
+	// 	return interpreter_b.Call(cross, method, storage, args...)
+	// default:
+	// 	panic("unknown interpreter realm: " + realmPath)
+	// }
+
+	// TODO reasearch a std.Call if it exists.
+	// it seems that it does not exists.
 }
 
 // Get current implementation address
