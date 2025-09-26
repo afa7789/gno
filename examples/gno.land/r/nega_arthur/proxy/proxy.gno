@@ -29,14 +29,14 @@ func Init(cur realm) {
 	owner = std.PreviousRealm().Address()
 
 	// PROXY HOLDS THE STORAGE
-	storage = minimalStorage.NewStorage()
+	storage = storage.NewStorage()
 	storage.Init()
 
 	initialized = true
 
 	// Initialize both contracts (interrealm calls)
-	minimalContractA.Init(cross)
-	minimalContractB.Init(cross)
+	contract_a.Init(cross)
+	contract_b.Init(cross)
 }
 
 // Set current implementation (like upgradeTo)
@@ -70,15 +70,15 @@ func Call(cur realm, method string, args ...interface{}) interface{} {
 	switch currentInterpreter {
 	case "A":
 		if method == "MethodA" {
-			return minimalContractA.MethodA(cross, storage, args[0].(string))
+			return contract_a.MethodA(cross, storage, args[0].(string))
 		} else if method == "GetData" {
-			return minimalContractA.GetData(cross, storage)
+			return contract_a.GetData(cross, storage)
 		}
 	case "B":
 		if method == "MethodA" {
-			return minimalContractB.MethodA(cross, storage, args[0].(string))
+			return contract_b.MethodA(cross, storage, args[0].(string))
 		} else if method == "GetData" {
-			return minimalContractB.GetData(cross, storage)
+			return contract_b.GetData(cross, storage)
 		}
 	}
 	panic("unknown method: " + method)
